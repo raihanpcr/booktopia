@@ -1,0 +1,765 @@
+basePath: /api
+definitions:
+  dto.AuthResponse:
+    properties:
+      email:
+        description: Alamat email pengguna.
+        example: john.doe@example.com
+        type: string
+      id:
+        description: ID pengguna, hanya disertakan jika ada (saat Register).
+        example: 1
+        type: integer
+      name:
+        description: Nama pengguna, hanya disertakan jika ada (saat Register).
+        example: John Doe
+        type: string
+      token:
+        description: Token JWT, hanya disertakan jika ada (saat Login atau Register
+          jika langsung login).
+        example: eyJhbGciOiJIUzI1Ni...
+        type: string
+    type: object
+  dto.BalanceResponse:
+    properties:
+      balance:
+        type: number
+      user_id:
+        type: string
+    type: object
+  dto.BalanceResponseApi:
+    properties:
+      data:
+        $ref: '#/definitions/dto.BalanceResponse'
+      message:
+        example: Get data success
+        type: string
+      status_code:
+        example: 200
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.BookCreateResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.BookResponse'
+      message:
+        example: Create user success
+        type: string
+      status_code:
+        example: 201
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.BookGetResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.BookResponse'
+        type: array
+      message:
+        example: Create user success
+        type: string
+      status_code:
+        example: 201
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.BookOrderItem:
+    properties:
+      book_id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  dto.BookResponse:
+    properties:
+      author:
+        type: string
+      category:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      is_donation_only:
+        type: boolean
+      price:
+        type: number
+      publisher:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      year_published:
+        type: integer
+    type: object
+  dto.CreateBookRequest:
+    properties:
+      author:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      is_donation_only:
+        type: boolean
+      price:
+        minimum: 0
+        type: number
+      publisher:
+        type: string
+      title:
+        type: string
+      year_published:
+        type: integer
+    required:
+    - author
+    - title
+    type: object
+  dto.CreateTransactionRequest:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.BookOrderItem'
+        type: array
+    type: object
+  dto.DeleteResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  dto.ErrorResponse:
+    properties:
+      error:
+        example: Pesan kesalahan yang deskriptif
+        type: string
+      message:
+        example: Internal Server Error
+        type: string
+      status_code:
+        example: 401
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.LoginRequest:
+    properties:
+      email:
+        description: Alamat email pengguna. `required` dan `email`.
+        example: john.doe@example.com
+        type: string
+      password:
+        description: Kata sandi pengguna. `required`.
+        example: password123
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.RegisterRequest:
+    properties:
+      email:
+        description: Alamat email pengguna. `required` dan `email` (format email valid).
+        example: john.doe@example.com
+        type: string
+      name:
+        description: Nama lengkap pengguna. `required` berarti tidak boleh kosong.
+        example: John Doe
+        type: string
+      password:
+        description: Kata sandi pengguna. `required` dan `min=8` (minimal 8 karakter).
+        example: password123
+        minLength: 8
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  dto.RegisterResponse:
+    properties:
+      email:
+        example: john.doe@example.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John Doe
+        type: string
+    required:
+    - email
+    - id
+    - name
+    type: object
+  dto.SendGiftRequest:
+    properties:
+      book_id:
+        type: string
+      message:
+        type: string
+      recipient_email:
+        type: string
+    required:
+    - book_id
+    - recipient_email
+    type: object
+  dto.TemplateLoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.AuthResponse'
+      message:
+        example: Create user success
+        type: string
+      status_code:
+        example: 201
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.TemplateRegisterResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.RegisterResponse'
+      message:
+        example: Create user success
+        type: string
+      status_code:
+        example: 201
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.TemplateSendGiftResponseApi:
+    properties:
+      data:
+        $ref: '#/definitions/dto.SendGiftRequest'
+      message:
+        example: Create data success
+        type: string
+      status_code:
+        example: 201
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.TopUpRequest:
+    properties:
+      amount:
+        type: number
+      method:
+        type: string
+    required:
+    - amount
+    - method
+    type: object
+  dto.TopUpResponse:
+    properties:
+      amount:
+        example: 50000
+        type: number
+      created_at:
+        example: "2025-07-25T15:00:00Z"
+        type: string
+      method:
+        example: credit_card
+        type: string
+      status:
+        example: success
+        type: string
+      transaction_id:
+        example: trx123
+        type: string
+      user_id:
+        example: user123
+        type: string
+    type: object
+  dto.TopUpResponseDto:
+    properties:
+      data:
+        $ref: '#/definitions/dto.TopUpResponse'
+      message:
+        example: Create data success
+        type: string
+      status_code:
+        example: 201
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.TransactionDetailResponse:
+    properties:
+      book_id:
+        type: string
+      price_per_unit:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  dto.TransactionListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.TransactionResponse'
+        type: array
+      message:
+        example: Create data success
+        type: string
+      status_code:
+        example: 200
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.TransactionResponse:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/dto.TransactionDetailResponse'
+        type: array
+      status:
+        type: string
+      total_amount:
+        type: number
+      transaction_date:
+        type: string
+      transaction_id:
+        type: string
+      user_id:
+        type: string
+    type: object
+  dto.TransactionResponseApi:
+    properties:
+      data:
+        $ref: '#/definitions/dto.TransactionResponse'
+      message:
+        example: Create data success
+        type: string
+      status_code:
+        example: 201
+        type: integer
+    required:
+    - message
+    - status_code
+    type: object
+  dto.UpdateBookRequest:
+    properties:
+      author:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      is_donation_only:
+        type: boolean
+      price:
+        minimum: 0
+        type: number
+      publisher:
+        type: string
+      status:
+        description: Validasi status
+        enum:
+        - available
+        - unavailable
+        type: string
+      title:
+        type: string
+      year_published:
+        type: integer
+    required:
+    - author
+    - title
+    type: object
+host: 34.101.226.106:8000
+info:
+  contact:
+    email: dev@booktopia.local
+    name: Booktopia Dev Team
+  description: Gateway service yang mengelola dan meneruskan permintaan ke berbagai
+    microservice di ekosistem Booktopia, termasuk auth-service, book-service, gifting-service,
+    transaction-service, dan wallet-service.
+  termsOfService: http://swagger.io/terms/
+  title: Booktopia Gateway API
+  version: "1.0"
+paths:
+  /admin/books:
+    post:
+      consumes:
+      - application/json
+      description: Create a new book record
+      parameters:
+      - description: Book to create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateBookRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.BookCreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new book
+      tags:
+      - books
+  /admin/books/{id}:
+    delete:
+      description: Delete a book by ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DeleteResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a book
+      tags:
+      - books
+    put:
+      consumes:
+      - application/json
+      description: Update book information by ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated book info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateBookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.BookCreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a book
+      tags:
+      - books
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Meneruskan permintaan login ke Auth Service
+      parameters:
+      - description: Data login user
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TemplateLoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Login User
+      tags:
+      - Gateway - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Meneruskan permintaan register ke Auth Service
+      parameters:
+      - description: Data pendaftaran user
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.TemplateRegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Register User
+      tags:
+      - Gateway - Auth
+  /books:
+    get:
+      description: Retrieve list of all books
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.BookGetResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get all books
+      tags:
+      - books
+  /books/{id}:
+    get:
+      description: Retrieve a single book by its ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.BookCreateResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Get a book by ID
+      tags:
+      - books
+  /gifts:
+    post:
+      consumes:
+      - application/json
+      description: Meneruskan permintaan pengiriman hadiah ke Gifting Service
+      parameters:
+      - description: Data pengiriman hadiah
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SendGiftRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.TemplateSendGiftResponseApi'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Kirim hadiah buku ke user lain
+      tags:
+      - Gateway - Gifting
+  /transactions:
+    get:
+      description: Mengambil daftar semua transaksi berdasarkan user_id dari token
+        JWT.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TransactionListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ambil semua transaksi milik user
+      tags:
+      - Gateway - Transaction
+    post:
+      consumes:
+      - application/json
+      description: Menerima list item buku dari user dan membuat transaksi baru (via
+        gRPC ke transaction-service).
+      parameters:
+      - description: Data transaksi
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.TransactionResponseApi'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Buat transaksi pembelian buku
+      tags:
+      - Gateway - Transaction
+  /wallet/balance:
+    get:
+      description: Mengambil saldo wallet berdasarkan user_id dari token JWT
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.BalanceResponseApi'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ambil saldo wallet user
+      tags:
+      - Gateway - Wallet
+  /wallet/topup:
+    post:
+      consumes:
+      - application/json
+      description: Melakukan top up saldo wallet berdasarkan request user
+      parameters:
+      - description: Detail top up saldo
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TopUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TopUpResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Top up saldo wallet
+      tags:
+      - Gateway - Wallet
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

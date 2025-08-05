@@ -1,0 +1,1140 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Gateway service yang mengelola dan meneruskan permintaan ke berbagai microservice di ekosistem Booktopia, termasuk auth-service, book-service, gifting-service, transaction-service, dan wallet-service.",
+        "title": "Booktopia Gateway API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Booktopia Dev Team",
+            "email": "dev@booktopia.local"
+        },
+        "version": "1.0"
+    },
+    "host": "34.101.226.106:8000",
+    "basePath": "/api",
+    "paths": {
+        "/admin/books": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new book record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "books"
+                ],
+                "summary": "Create a new book",
+                "parameters": [
+                    {
+                        "description": "Book to create",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateBookRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BookCreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/books/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update book information by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "books"
+                ],
+                "summary": "Update a book",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Book ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated book info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateBookRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BookCreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a book by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "books"
+                ],
+                "summary": "Delete a book",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Book ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DeleteResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "description": "Meneruskan permintaan login ke Auth Service",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gateway - Auth"
+                ],
+                "summary": "Login User",
+                "parameters": [
+                    {
+                        "description": "Data login user",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TemplateLoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "description": "Meneruskan permintaan register ke Auth Service",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gateway - Auth"
+                ],
+                "summary": "Register User",
+                "parameters": [
+                    {
+                        "description": "Data pendaftaran user",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TemplateRegisterResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/books": {
+            "get": {
+                "description": "Retrieve list of all books",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "books"
+                ],
+                "summary": "Get all books",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BookGetResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/books/{id}": {
+            "get": {
+                "description": "Retrieve a single book by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "books"
+                ],
+                "summary": "Get a book by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Book ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BookCreateResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gifts": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Meneruskan permintaan pengiriman hadiah ke Gifting Service",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gateway - Gifting"
+                ],
+                "summary": "Kirim hadiah buku ke user lain",
+                "parameters": [
+                    {
+                        "description": "Data pengiriman hadiah",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SendGiftRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TemplateSendGiftResponseApi"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mengambil daftar semua transaksi berdasarkan user_id dari token JWT.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gateway - Transaction"
+                ],
+                "summary": "Ambil semua transaksi milik user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TransactionListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Menerima list item buku dari user dan membuat transaksi baru (via gRPC ke transaction-service).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gateway - Transaction"
+                ],
+                "summary": "Buat transaksi pembelian buku",
+                "parameters": [
+                    {
+                        "description": "Data transaksi",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateTransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TransactionResponseApi"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/wallet/balance": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mengambil saldo wallet berdasarkan user_id dari token JWT",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gateway - Wallet"
+                ],
+                "summary": "Ambil saldo wallet user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BalanceResponseApi"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/wallet/topup": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Melakukan top up saldo wallet berdasarkan request user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gateway - Wallet"
+                ],
+                "summary": "Top up saldo wallet",
+                "parameters": [
+                    {
+                        "description": "Detail top up saldo",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TopUpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TopUpResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.AuthResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "description": "Alamat email pengguna.",
+                    "type": "string",
+                    "example": "john.doe@example.com"
+                },
+                "id": {
+                    "description": "ID pengguna, hanya disertakan jika ada (saat Register).",
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "description": "Nama pengguna, hanya disertakan jika ada (saat Register).",
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "token": {
+                    "description": "Token JWT, hanya disertakan jika ada (saat Login atau Register jika langsung login).",
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1Ni..."
+                }
+            }
+        },
+        "dto.BalanceResponse": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.BalanceResponseApi": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.BalanceResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Get data success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "dto.BookCreateResponse": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.BookResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Create user success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
+        "dto.BookGetResponse": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.BookResponse"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Create user success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
+        "dto.BookOrderItem": {
+            "type": "object",
+            "properties": {
+                "book_id": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.BookResponse": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_donation_only": {
+                    "type": "boolean"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "publisher": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "year_published": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.CreateBookRequest": {
+            "type": "object",
+            "required": [
+                "author",
+                "title"
+            ],
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "is_donation_only": {
+                    "type": "boolean"
+                },
+                "price": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "publisher": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "year_published": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.CreateTransactionRequest": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.BookOrderItem"
+                    }
+                }
+            }
+        },
+        "dto.DeleteResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ErrorResponse": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Pesan kesalahan yang deskriptif"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Internal Server Error"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 401
+                }
+            }
+        },
+        "dto.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "description": "Alamat email pengguna. `required` dan `email`.",
+                    "type": "string",
+                    "example": "john.doe@example.com"
+                },
+                "password": {
+                    "description": "Kata sandi pengguna. `required`.",
+                    "type": "string",
+                    "example": "password123"
+                }
+            }
+        },
+        "dto.RegisterRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "description": "Alamat email pengguna. `required` dan `email` (format email valid).",
+                    "type": "string",
+                    "example": "john.doe@example.com"
+                },
+                "name": {
+                    "description": "Nama lengkap pengguna. `required` berarti tidak boleh kosong.",
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "password": {
+                    "description": "Kata sandi pengguna. `required` dan `min=8` (minimal 8 karakter).",
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "password123"
+                }
+            }
+        },
+        "dto.RegisterResponse": {
+            "type": "object",
+            "required": [
+                "email",
+                "id",
+                "name"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "john.doe@example.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                }
+            }
+        },
+        "dto.SendGiftRequest": {
+            "type": "object",
+            "required": [
+                "book_id",
+                "recipient_email"
+            ],
+            "properties": {
+                "book_id": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "recipient_email": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.TemplateLoginResponse": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.AuthResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Create user success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
+        "dto.TemplateRegisterResponse": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.RegisterResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Create user success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
+        "dto.TemplateSendGiftResponseApi": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.SendGiftRequest"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Create data success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
+        "dto.TopUpRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "method"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "method": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.TopUpResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "example": 50000
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-07-25T15:00:00Z"
+                },
+                "method": {
+                    "type": "string",
+                    "example": "credit_card"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                },
+                "transaction_id": {
+                    "type": "string",
+                    "example": "trx123"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "user123"
+                }
+            }
+        },
+        "dto.TopUpResponseDto": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.TopUpResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Create data success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
+        "dto.TransactionDetailResponse": {
+            "type": "object",
+            "properties": {
+                "book_id": {
+                    "type": "string"
+                },
+                "price_per_unit": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.TransactionListResponse": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TransactionResponse"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Create data success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "dto.TransactionResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TransactionDetailResponse"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_amount": {
+                    "type": "number"
+                },
+                "transaction_date": {
+                    "type": "string"
+                },
+                "transaction_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.TransactionResponseApi": {
+            "type": "object",
+            "required": [
+                "message",
+                "status_code"
+            ],
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.TransactionResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Create data success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 201
+                }
+            }
+        },
+        "dto.UpdateBookRequest": {
+            "type": "object",
+            "required": [
+                "author",
+                "title"
+            ],
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "is_donation_only": {
+                    "type": "boolean"
+                },
+                "price": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "publisher": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Validasi status",
+                    "type": "string",
+                    "enum": [
+                        "available",
+                        "unavailable"
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                },
+                "year_published": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

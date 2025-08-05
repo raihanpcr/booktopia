@@ -1,0 +1,100 @@
+version: "3.8"
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      KAFKA_HEAP_OPTS: "-Xms512M -Xmx512M"
+      JAVA_TOOL_OPTIONS: "--add-opens=java.base/jdk.internal.platform=ALL-UNNAMED"
+    networks:
+      - booktopia-network
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - booktopia-network
+    restart: unless-stopped
+
+  auth-service:
+    image: asia-southeast2-docker.pkg.dev/booktopia-project/docker-asia-v2/auth-service:latest
+    ports:
+      - "8084:8084"
+    env_file: ./auth-service/.env
+    networks:
+      - booktopia-network
+    restart: unless-stopped
+
+  book-service:
+    image: asia-southeast2-docker.pkg.dev/booktopia-project/docker-asia-v2/book-service:latest
+    ports:
+      - "8081:8081"
+    env_file: ./book-service/.env
+    networks:
+      - booktopia-network
+    restart: unless-stopped
+
+  wallet-service:
+    image: asia-southeast2-docker.pkg.dev/booktopia-project/docker-asia-v2/wallet-service:latest
+    ports:
+      - "50053:50053"
+    env_file: ./wallet-service/.env
+    networks:
+      - booktopia-network
+    restart: unless-stopped
+
+  transaction-service:
+    image: asia-southeast2-docker.pkg.dev/booktopia-project/docker-asia-v2/transaction-service:latest
+    ports:
+      - "50052:50052"
+    env_file: ./transaction-service/.env
+    depends_on:
+      - kafka
+    networks:
+      - booktopia-network
+    restart: unless-stopped
+
+  gifting-service:
+    image: asia-southeast2-docker.pkg.dev/booktopia-project/docker-asia-v2/gifting-service:latest
+    ports:
+      - "50054:50054"
+    env_file: ./gifting-service/.env
+    networks:
+      - booktopia-network
+    restart: unless-stopped
+
+  gateway-service:
+    image: asia-southeast2-docker.pkg.dev/booktopia-project/docker-asia-v2/gateway-service:latest
+    ports:
+      - "8000:8000"
+    env_file: ./gateway-service/.env
+    depends_on:
+      - auth-service
+      - book-service
+      - transaction-service
+      - wallet-service
+      - gifting-service
+    networks:
+      - booktopia-network
+    restart: unless-stopped
+
+networks:
+  booktopia-network:
+    driver: bridge

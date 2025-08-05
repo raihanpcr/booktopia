@@ -1,0 +1,12 @@
+go 1.24
+
+toolchain go1.24.3
+
+use (
+	./auth-service
+	./book-service
+	./gateway-service
+	./gifting-service
+	./transaction-service
+	./wallet-service
+)

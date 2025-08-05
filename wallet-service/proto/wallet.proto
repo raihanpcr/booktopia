@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package wallet;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/your-username/wallet-service/proto";
+
+// Service gRPC untuk Wallet
+service WalletService {
+  // Mendapatkan saldo pengguna
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+  // Melakukan top-up saldo
+  rpc TopUp(TopUpRequest) returns (TopUpResponse);
+  // Digunakan oleh service lain (seperti transaction-service) untuk mengurangi saldo
+  rpc Debit(DebitRequest) returns (DebitResponse);
+  // Digunakan untuk mengembalikan dana (refund/rollback)
+  rpc Credit(CreditRequest) returns (CreditResponse);
+}
+
+// --- Requests ---
+message GetBalanceRequest {
+  string user_id = 1;
+}
+
+message TopUpRequest {
+  string user_id = 1;
+  double amount = 2;
+  string method = 3;
+}
+
+message DebitRequest {
+  string user_id = 1;
+  double amount = 2;
+}
+
+message CreditRequest {
+  string user_id = 1;
+  double amount = 2;
+}
+
+
+// --- Responses ---
+message GetBalanceResponse {
+  string user_id = 1;
+  double balance = 2;
+}
+
+message TopUpResponse {
+  string top_up_id = 1;
+  string user_id = 2;
+  double amount = 3;
+  string status = 4;
+  google.protobuf.Timestamp top_up_date = 5;
+}
+
+message DebitResponse {
+  bool success = 1;
+  double new_balance = 2;
+}
+
+message CreditResponse {
+  bool success = 1;
+  double new_balance = 2;
+}

@@ -1,0 +1,12 @@
+basePath: /api
+host: localhost:8081
+info:
+  contact:
+    email: dev@booktopia.com
+    name: Tim Developer Booktopia
+  description: Ini adalah service Manajemen Book untuk Booktopia.
+  termsOfService: http://swagger.io/terms/
+  title: Booktopia Book Service API
+  version: "1.0"
+paths: {}
+swagger: "2.0"

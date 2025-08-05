@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package gifting;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/your-username/gifting-service/proto";
+
+service GiftingService {
+  // Mengirim hadiah buku dari donor ke penerima
+  rpc SendGift(SendGiftRequest) returns (SendGiftResponse);
+  // (Opsional) Endpoint lain seperti melihat riwayat hadiah
+}
+
+// --- Request ---
+message SendGiftRequest {
+  string donor_id = 1;
+  string recipient_email = 2;
+  string book_id = 3;
+  string message = 4;
+}
+
+// --- Response ---
+message SendGiftResponse {
+  string gift_id = 1;
+  string donor_id = 2;
+  string recipient_email = 3;
+  string book_id = 4;
+  string status = 5;
+  google.protobuf.Timestamp gift_date = 6;
+}

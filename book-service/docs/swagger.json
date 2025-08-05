@@ -1,0 +1,16 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Ini adalah service Manajemen Book untuk Booktopia.",
+        "title": "Booktopia Book Service API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Tim Developer Booktopia",
+            "email": "dev@booktopia.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8081",
+    "basePath": "/api",
+    "paths": {}
+}
